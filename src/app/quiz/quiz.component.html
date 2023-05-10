@@ -1,0 +1,51 @@
+<div class="container-md">
+  <div class="row">
+    <div class="col">
+      <form [formGroup]="form" (ngSubmit)="onSubmitSelectQuiz()">
+        <div class="input-group">
+          <select id="categorySelect" formControlName="category" class="form-select">
+            <option value="null" disabled>Choose a category</option>
+            <ng-container *ngIf="(categories$ | async) as categories; else loading">
+              <option *ngFor="let c of categories" [ngValue]="c.id">
+                {{ c.name }}
+              </option>
+            </ng-container>
+          </select>
+          <select id="difficultySelect" formControlName="difficulty" class="form-select">
+            <option value="null" disabled>Choose a difficulty</option>
+            <option *ngFor="let d of difficulties" [ngValue]="d">
+              {{ d }}
+            </option>
+          </select>
+          <button id="createBtn" class="btn btn-primary" type="submit" [disabled]="form.invalid">Create Quiz
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div *ngIf="!!quiz" class="row justify-content-center">
+    <div class="col-10">
+      <div *ngFor="let question of quiz" class="card">
+        <div class="card-header">{{question.question}}</div>
+        <div class="card-body row">
+          <div *ngFor="let answer of question.all_answers, index as i" class="col-auto">
+            <button (click)="selectAnswer(i, question)"
+                    type="button" class="btn btn-outline-primary" data-bs-toggle="button"
+                    [class.active]="question.selectedAnswer === answer">{{answer}}</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <div *ngIf="allAnswersSelected" class="col-10">
+      <button type="button" class="btn btn-success" (click)="onSubmitQuizAnswers()">
+        Check Answers
+      </button>
+    </div>
+  </div>
+</div>
+
+<ng-template #loading>
+  <option>Loading categories...</option>
+</ng-template>
+

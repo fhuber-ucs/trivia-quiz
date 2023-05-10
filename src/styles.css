@@ -1,0 +1,10 @@
+/* You can add global styles to this file, and also import other style files */
+body {
+  padding-top: 30px;
+}
+.card {
+  margin: 5px 0;
+}
+form {
+  margin-bottom: 20px;
+}
