@@ -25,7 +25,7 @@ export class ResultsComponent implements OnInit {
         this.numberOfCorrectAnswers++;
       }
     }
-    this.resultsText = "correct answers: " + this.numberOfCorrectAnswers;
+    this.resultsText = "You scored " + this.numberOfCorrectAnswers + " out of 5";
     if (this.numberOfCorrectAnswers < 2) {
       this.resultsClass = "bg-danger text-white text-center";
     } else if (this.numberOfCorrectAnswers < 4) {
