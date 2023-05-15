@@ -23,13 +23,13 @@
       </form>
     </div>
   </div>
-  <div *ngIf="!!quiz" class="row justify-content-center">
+  <div *ngIf="quiz$ | async as quiz" class="row justify-content-center">
     <div class="col-10">
       <div *ngFor="let question of quiz" class="card">
         <div class="card-header">{{question.question}}</div>
         <div class="card-body row">
           <div *ngFor="let answer of question.all_answers, index as i" class="col-auto">
-            <button (click)="selectAnswer(i, question)"
+            <button (click)="selectAnswer(i, question, quiz)"
                     type="button" class="btn btn-outline-primary" data-bs-toggle="button"
                     [class.active]="question.selectedAnswer === answer">{{answer}}</button>
           </div>
@@ -38,7 +38,7 @@
       </div>
     </div>
     <div *ngIf="allAnswersSelected" class="col-10">
-      <button type="button" class="btn btn-success" (click)="onSubmitQuizAnswers()">
+      <button type="button" class="btn btn-success" (click)="onSubmitQuizAnswers(quiz)">
         Check Answers
       </button>
     </div>

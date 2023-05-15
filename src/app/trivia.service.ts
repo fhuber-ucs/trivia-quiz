@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {map, Observable} from 'rxjs';
-import { HttpClient } from '@angular/common/http';
+import {HttpClient, HttpParams} from '@angular/common/http';
 
 export interface TriviaCategoriesResponse {
   trivia_categories: TriviaCategory[];
@@ -38,8 +38,8 @@ export class TriviaService {
   }
 
   getQuiz(category: number, difficulty: string) : Observable<TriviaQuestion[]> {
-    const quizUrlTemplate = `${this.getQuizBaseUrl}?amount=5&category=${category}&difficulty=${difficulty}&type=multiple`;
-    return this.http.get<TriviaQuestionsResponse>(quizUrlTemplate).pipe(map(result => {
+    const options = { params: new HttpParams().set('amount', 5).set('category', category).set('difficulty', difficulty).set('type', 'multiple') };
+    return this.http.get<TriviaQuestionsResponse>(this.getQuizBaseUrl, options).pipe(map(result => {
       for (let question of result.results) {
         question.question = this.decodeHtml(question.question);
         question.correct_answer = this.decodeHtml(question.correct_answer);

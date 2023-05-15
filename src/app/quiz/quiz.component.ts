@@ -12,7 +12,7 @@ import {from, map, Observable} from "rxjs";
 export class QuizComponent implements OnInit {
   categories$: Observable<TriviaCategory[]> = from([]);
   difficulties = ['easy', 'medium', 'hard'];
-  quiz: TriviaQuestion[] = [];
+  quiz$: Observable<TriviaQuestion[]> = from([]);
 
   form = new FormGroup({
     category: new FormControl<number | null>(null, Validators.required),
@@ -33,24 +33,20 @@ export class QuizComponent implements OnInit {
   }
 
   onSubmitSelectQuiz() {
-    this.triviaService.getQuiz(this.form?.get("category")?.value!, this.form.get("difficulty")?.value!)
-      .subscribe((response) => {
-      this.quiz = response;
-    });
+    this.quiz$ = this.triviaService.getQuiz(this.form?.get("category")?.value!, this.form.get("difficulty")?.value!);
   }
 
-  onSubmitQuizAnswers() {
-    this.router.navigate(['/results'], {state: {quiz:this.quiz}})
+  onSubmitQuizAnswers(quiz: TriviaQuestion[]) {
+    this.router.navigate(['/results'], {state: {quiz:quiz}})
   }
 
-  selectAnswer(answerToSelect: number, question: TriviaQuestion) {
+  selectAnswer(answerToSelect: number, question: TriviaQuestion, quiz: TriviaQuestion[]) {
       question.selectedAnswer = question.all_answers[answerToSelect];
-      this.checkAllAnswersSelected();
+      this.checkAllAnswersSelected(quiz);
   }
 
-  checkAllAnswersSelected() {
-    if (!this.quiz || this.quiz.length === 0) return;
-    for (let question of this.quiz) {
+  checkAllAnswersSelected(quiz: TriviaQuestion[]) {
+    for (let question of quiz) {
       if (question.selectedAnswer === "") {
         return;
       }
